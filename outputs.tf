@@ -1,3 +1,3 @@
-output "publish-bucket" {
-  value = "${var.publish-bucket}"
+output "publish_bucket" {
+  value = "${aws_s3_bucket.this.id}"
 }
