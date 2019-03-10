@@ -1,3 +1,3 @@
 output "publish_bucket" {
-  value = "${aws_s3_bucket.this.id}"
+  value = "${var.publish_bucket}"
 }
