@@ -20,30 +20,31 @@ data "aws_iam_policy_document" "this" {
 
 resource "aws_iam_user_policy" "this" {
   name   = "s3-publish"
-  user   = "${aws_iam_user.this.name}"
-  policy = "${data.aws_iam_policy_document.this.json}"
+  user   = aws_iam_user.this.name
+  policy = data.aws_iam_policy_document.this.json
 }
 
 resource "awscreds_iam_access_key" "this" {
-  user = "${aws_iam_user.this.name}"
+  user = aws_iam_user.this.name
   file = "creds/${aws_iam_user.this.name}"
 }
 
 resource "aws_s3_bucket" "this" {
-  bucket = "${var.publish_bucket}"
+  bucket = var.publish_bucket
 
   versioning {
     enabled = "true"
   }
 
   logging {
-    target_bucket = "${var.logging_bucket}"
+    target_bucket = var.logging_bucket
     target_prefix = "${var.publish_bucket}/"
   }
 
-  count = "${var.make_bucket}"
+  count = var.make_bucket
 }
 
 resource "aws_iam_user" "this" {
   name = "s3-publish-${var.publish_bucket}"
 }
+
