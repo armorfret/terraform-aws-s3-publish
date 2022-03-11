@@ -1,12 +1,12 @@
 terraform {
   required_providers {
     aws = {
-      version = "3.4.0"
+      version = "~> 4.0"
     }
 
     awscreds = {
       source  = "terraform.scrtybybscrty.org/armorfret/awscreds"
-      version = "0.2.0"
+      version = "~> 0.3"
     }
   }
 }
