@@ -45,17 +45,22 @@ resource "awscreds_iam_access_key" "this" {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.publish_bucket
+  count  = var.make_bucket
+}
 
-  versioning {
-    enabled = "true"
+resource "aws_s3_bucket_versioning" "this" {
+  bucket = aws_s3_bucket.this.id
+  versioning_configuration {
+    status = "Enabled"
   }
-
-  logging {
-    target_bucket = var.logging_bucket
-    target_prefix = "${var.publish_bucket}/"
-  }
-
   count = var.make_bucket
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  bucket        = aws_s3_bucket.this.id
+  target_bucket = var.logging_bucket
+  target_prefix = "${var.publish_bucket}/"
+  count         = var.make_bucket
 }
 
 resource "aws_iam_user" "this" {
