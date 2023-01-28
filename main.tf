@@ -46,6 +46,16 @@ resource "awscreds_iam_access_key" "this" {
 resource "aws_s3_bucket" "this" {
   bucket = var.publish_bucket
   count  = var.make_bucket
+  acl    = "private-read"
+}
+
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket                  = aws_s3_bucket.this[count.index].id
+  count                   = var.make_bucket
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+  ignore_public_acls      = true
 }
 
 resource "aws_s3_bucket_versioning" "this" {
@@ -63,6 +73,7 @@ resource "aws_s3_bucket_logging" "this" {
   count         = var.make_bucket
 }
 
+#tfsec:ignore:aws-iam-no-user-attached-policies
 resource "aws_iam_user" "this" {
   name = "s3-publish-${var.publish_bucket}"
 }
