@@ -48,7 +48,7 @@ resource "aws_s3_bucket" "this" {
   count  = var.make_bucket
 }
 
-resource "aws_s3_bucket_acl" "vantage_bucket_acl" {
+resource "aws_s3_bucket_acl" "this" {
   bucket = aws_s3_bucket.this[count.index].id
   count  = var.make_bucket
   acl    = "private"
