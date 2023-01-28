@@ -46,7 +46,7 @@ resource "awscreds_iam_access_key" "this" {
 resource "aws_s3_bucket" "this" {
   bucket = var.publish_bucket
   count  = var.make_bucket
-  acl    = "private-read"
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
