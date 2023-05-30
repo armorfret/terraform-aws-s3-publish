@@ -48,10 +48,13 @@ resource "aws_s3_bucket" "this" {
   count  = var.make_bucket
 }
 
-resource "aws_s3_bucket_acl" "this" {
-  bucket = aws_s3_bucket.this[count.index].id
+resource "aws_s3_bucket_ownership_controls" "this" {
   count  = var.make_bucket
-  acl    = "private"
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
