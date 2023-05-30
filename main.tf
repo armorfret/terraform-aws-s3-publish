@@ -50,7 +50,7 @@ resource "aws_s3_bucket" "this" {
 
 resource "aws_s3_bucket_ownership_controls" "this" {
   count  = var.make_bucket
-  bucket = aws_s3_bucket.this.id
+  bucket = aws_s3_bucket.this[count.index].id
 
   rule {
     object_ownership = "BucketOwnerEnforced"
