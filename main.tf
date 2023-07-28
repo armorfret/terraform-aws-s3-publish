@@ -45,11 +45,24 @@ resource "awscreds_iam_access_key" "this" {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.publish_bucket
-  count  = var.make_bucket
+  count  = var.make_bucket ? 1 : 0
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  count = var.make_bucket ? 1 : 0
+
+  bucket = aws_s3_bucket.this[count.index].id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.use_kms ? var.kms_key_arn : null
+      sse_algorithm     = var.use_kms ? "aws:kms" : "AES256"
+    }
+  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "this" {
-  count  = var.make_bucket
+  count  = var.make_bucket ? 1 : 0
   bucket = aws_s3_bucket.this[count.index].id
 
   rule {
@@ -59,7 +72,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket                  = aws_s3_bucket.this[count.index].id
-  count                   = var.make_bucket
+  count                   = var.make_bucket ? 1 : 0
   block_public_acls       = true
   block_public_policy     = true
   restrict_public_buckets = true
@@ -71,14 +84,14 @@ resource "aws_s3_bucket_versioning" "this" {
   versioning_configuration {
     status = "Enabled"
   }
-  count = var.make_bucket
+  count = var.make_bucket ? 1 : 0
 }
 
 resource "aws_s3_bucket_logging" "this" {
   bucket        = aws_s3_bucket.this[count.index].id
   target_bucket = var.logging_bucket
   target_prefix = "${var.publish_bucket}/"
-  count         = var.make_bucket
+  count         = var.make_bucket ? 1 : 0
 }
 
 #tfsec:ignore:aws-iam-no-user-attached-policies

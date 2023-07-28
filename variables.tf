@@ -8,9 +8,21 @@ variable "publish_bucket" {
   type        = string
 }
 
-variable "make_bucket" {
-  description = "Set to 0 if bucket already exists to skip creation of publish-bucket"
+variable "kms_key_arn" {
+  description = "Use custom KMS key for vault bucket"
   type        = string
-  default     = "1"
+  default     = ""
+}
+
+variable "use_kms" {
+  description = "Use KMS instead of AES SSE"
+  type        = bool
+  default     = false
+}
+
+variable "make_bucket" {
+  description = "Create publish-bucket (set to false if bucket has been created external to module)"
+  type        = bool
+  default     = true
 }
 
