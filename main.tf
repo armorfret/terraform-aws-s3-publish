@@ -94,8 +94,7 @@ resource "aws_s3_bucket_logging" "this" {
   count         = var.make_bucket ? 1 : 0
 }
 
-#tfsec:ignore:aws-iam-no-user-attached-policies
-resource "aws_iam_user" "this" {
+resource "aws_iam_user" "this" { #trivy:ignore:AVD-AWS-0143
   name = "s3-publish-${var.publish_bucket}"
 }
 
